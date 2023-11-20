@@ -1,0 +1,93 @@
+webapp/template/*.ftl
+	  /web-inf/web.xml
+	  
+布尔类型：?c ?string ?string("12","1")
+
+日期类型：?date ?time ?datetime ?string("yyyy/MM/dd HH:mm:ss")
+
+数值类型：?c ?string.currency ?string.percent ?string["0.##"]   数值数据默认加000.000.000加点. ?c可解决
+
+字符串类型 ?substing(start,end) ?uncap_first ?cap_first ?lower_case ?upper_case ?length ?starts_with("xx")?string ?ends_wiht("xx") ?index_of("xx") ?trim ?replace("xx","yy")
+${"你好啊"+map.name} 字符串拼接
+
+列表类型
+${map.id}   ${map.name}
+list01:${list[0]} list02:${list[1]}
+<#list list as li>
+  ${li}<br>
+</#list>
+
+数组或者list aa=[1,2,3,4,5] 
+<#list aa as a>
+  ${a}-${a?index}
+</#list>
+
+map
+<#list cityMap?keys as key>
+  ${key}---${cityMap[key]}
+</#list>
+<#list cityMap?values as value>
+  ${value}
+</#list>
+
+插值内支持+ - * 、/ % 
+${msg!} 避免变量不存在或者null报错 ${msg!"默认值"}
+
+if指令
+<#if a??>
+ 存在
+ <#else>
+ 不存在
+</#if>
+
+<#if a??>
+ 优秀
+ <#elseif b??>
+  良
+ <#else>
+  不及格
+</#if>
+
+<#assign str="hello" names=["2","32","23"]>
+${str}<br>${names?join(",")}
+
+自定义指令 macro 宏 存放模板片段 
+可单独提取放置在一个*.ftl文件中 配合 导入<#import "f04.ftl" as f04> 使用<@f04.e 4></@f04.e>
+<#macro address num1 num2>
+  fnendoinren${num1}--${num2}
+</#macro>
+使用
+<@address></@address><br>
+如：9*9乘法表
+
+占位指令 配合 自定义指令
+定义：
+<#macro g>
+  公司：<#nested>
+</#macro>
+使用：
+<@g>
+京东
+</@g>
+<@g>
+拼多多
+</@g>
+
+包含指令 
+<#include "test.ftl">     html ftl txt
+
+
+??判断变量是否存在 返回布尔值
+序列类型(数组 set list)：?size ?first ?last ?index ?reverse ?sort ?sort?reverse ?sort_by("字段名")
+
+users2??存在数据不为空，然后遍历
+
+<h2 align="center">${title}</h2>
+
+*.ftl
+显示注释 <!-- -->   隐藏注释 <#-- -->
+插值 ${}
+
+freemarker页面静态化处理
+难点：哪些数据需要静态化、哪些数据不需要
+数据固定到html页面 

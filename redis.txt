@@ -1,0 +1,8 @@
+redis
+hash
+  hset hget hmget hmset hgetall hkeys hvals hincrby hsetnx
+list 类似Java LinkedList双向链表 有序 可重 插入删除快 查询速度一般，如朋友圈点赞先后顺序、评论列表
+  lpush rpush lpop rpop lrange  blpop brpop
+set 类似Java HashSet 无序 不重 查找快 支持交集、并集、差集
+  单个集合操作                                        多个集合操作
+  sadd srem scard sismember smembers sinter sdiff sunion

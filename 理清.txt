@@ -1,0 +1,312 @@
+jdbc.url=jdbc:mysql://10.243.82.104:3306/mimsdb_001?characterEncoding=utf-8
+jdbc.username=fabu
+jdbc.password=6v28XpAVJf7g
+
+
+jdbc.url1=jdbc:mysql://10.243.82.103:3306/mimsdb_002?characterEncoding=utf-8
+jdbc.username1=fabu
+jdbc.password1=P3hRJa0j3Z7y
+
+jdbc.url2=jdbc:mysql://10.243.82.102:3306/mimsdb_003?characterEncoding=utf-8
+jdbc.username2=fabu
+jdbc.password2=t8IT9Pqyu6F0
+
+
+
+mims_git 商家库存管理系统
+mimm-web 打成jar controller模块层次
+mims-intf 服务接口层 service接口、dao接口层次
+mims-service 服务实现层 service dao接口实现层
+mims-pom 父依赖管理
+mims-util apache commons、 BaseController 请求、响应、分页、用户信息
+	统一的参数获取Map(key-value)与处理，数据传给视图页面展示，可避免建立很多实体类，接受参数实体类DTO、VO）
+	(以前实习，写代码时，都是以数据库表为基础，前端页面->实体类->controller->service->dao->表)
+mims-pom 父依赖模块 设置环境变量
+
+web.xml
+	过滤器设置编码、授权
+	监听器<listener>
+	<load-on-startup>
+
+待搞懂
+	分库分片：ShardingDalClient
+
+分库规则：根据StatementId从configuration对象读取出对应的分库配置，sqlId和Configuration获取片库规则 分库路由
+	FreeMarker语法
+	?exists 、  :allocateOrderId(参数占位符)、   ${minRow},${maxRow}
+
+		 <#if supplierCode?exists && supplierCode != ''>
+			 	AND SUPPLIER_CODE =:supplierCode
+		<#else>
+
+http://mimmsit.cnsuning.com/mimm/inventoryBack/queryActivityCommodity.action
+
+2023/11/3
+mims-service模块
+spring容器配置、sqlMap、shard配置
+看配置了解注入：
+	spring容器注入配置文件也区分开(spring-impl.xml (spring-jms.xml (spring-res.xml (spring-rsf.xml)
+	分片分库配置文件 (main-shard.xml主库001、swl-shard.xml从库002 003)
+spring 配置文件注入成员变量数据，也考虑父类成员变量注入 ，如类ShardingDalClient extends DefaultDalClient
+	ref="shardRegister" 注入对象 、值、  配置文件信息value="classpath*:conf/sharding/*.xml" Resource[]
+Configuration configuration如何被注入装载数据的？然后从其中查分库配置
+
+类分库客户端ShardingDalClient  属性 shardRegister数据源管理器
+类多数据源事务MultiDataSourceTransactionManager transactionManager 属性 shardRegister (方法的事务另外配置传播行为、隔离级别MySql默认可重复读)、aop事务管理作用于mims.intf service接口、mims.impl Service接口实现）
+类分库数据源管理器DefaultShardRegister shardRegister 属性 Set<Shard> shards、(注入属性Set集合第一次见)
+类分片Shard 属性id、dataSource（类分片中注入了数据源）shard-main
+类DriverManagerDataSource 或其继承的属性 url、username、password、Class.forName(driverClassName)
+类 
+每个分片set注入一个数据源
+
+CookieLocaleResolver Spring Cookie保存国际化语言区域信息，功能注入 想用就插入
+
+mimm-web模块
+RemoteTemplateClient、FreeMarkerConfigurationFactoryBean
+
+// 写的不理解 new Configuration(); 
+ShardRouter shardRouter = ShardingConfigurationUtil.getStatementMappedShardRouter(configuration, sqlId);
+
+    public static String getStatementMappedShardRef(Configuration configuration, String statementId) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> sqlShardMapping = (Map<String, String>) configuration
+                .getAttribute(SQLRMAPPING_HOLD_ON_CONFIGURATION_ATTRIBUTE_NAME);
+        if (sqlShardMapping == null) {
+            sqlShardMapping = new HashMap<String, String>();
+            configuration.addAttribute(SQLRMAPPING_HOLD_ON_CONFIGURATION_ATTRIBUTE_NAME, sqlShardMapping);
+        }
+        return sqlShardMapping.get(statementId);// 我的想法是肯定为null 这段代码
+
+    }
+
+频繁创建HashMap<String,Object>分别以_shard_Router_、_sql_Shard_Mapping_、_namespace_Shard_Mapping_为key？
+
+
+类ShardingDalClient 分库客户端
+
+类Configuration 属性 ConcurrentHashMap<String, MappedStatement> mappedStatements
+类MappedSqlExecutor   代码传递数据不理解
+            //根据sqlId获取对应的sql描述
+            MappedStatement mappedStatement = configuration.getMappedStatement(sqlId, true);
+            					    mappedStatements.get(sqlId);
+
+类ShardingDalClient  
+	// 代码获取MappedStatement信息
+	MappedStatement mappedStatement = configuration.getMappedStatement(sqlId, true);
+
+
+2023/11/6
+freemark的视图解析ViewResovler
+写controller->service->dao->ftl文件
+
+    @RequestMapping("/queryActivityCommodity.action")
+    public String queryActivityCommodity(HttpServletRequest request){
+        Map<String,Object> paramMap = baseController.getParams();
+        Page<?> pageInfo = null;
+        try{
+            pageInfo = inventoryBasicService.queryFactoryActivityCommodity(paramMap);
+        }catch (Exception e) {
+            LOGGER.error("查询厂送活动商品:" + MsgHandleUtil.getExceptionString(e));
+        }
+        request.setAttribute("pageInfo", pageInfo);
+        return "inventory/activityCommodity";
+    }
+
+有些链接访问不了的如：
+	http://mimmsit.cnsuning.com/mimm/cswarehouse/queryAddressPage.action 返回对应的ftl文件视图
+
+
+查询town的数量
+	select count(id)
+	from mims_t_town
+	where 1 = 1
+            <#if town_code?? && town_code != ''>
+                AND town_code = :town_code
+            </#if>
+            <#if town_name?? && town_name!= ''>
+                AND town_name = :town_name
+            </#if>
+            <#if district_code?? && district_code!= ''>
+                AND district_code = :district_code
+            </#if>
+
+    <sql id="PageList">
+        <![CDATA[
+            select
+                id as "id",
+                town_code as "town_code",
+                town_name as "town_name",
+                district_code as "district_code",
+                version_no  as "version_no",
+                create_time as "create_time",
+                update_time as "updateTime",
+            from   mims_t_town
+            where 1 = 1
+            <#if town_code?? && town_code != ''>
+                AND town_code = :town_code
+            </#if>
+            <#if town_name?? && town_name!= ''>
+                AND town_name = :town_name
+            </#if>
+            <#if district_code?? && district_code!= ''>
+                AND district_code = :district_code
+            </#if>
+            LIMIT ${minRow},${maxRow}
+        ]]>
+    </sql>
+
+
+
+占位符   :operator
+?? 检查变量是否存在 true或者false
+模糊查询不会
+?has_content
+townInfo.townCode!''
+
+
+create table mims_t_town
+(
+  id            bigint auto_increment
+  comment '主键ID'
+    primary key,
+  town_code     varchar(20)  null
+  comment '街道编码',
+  town_name     varchar(100) null
+  comment '街道名称',
+  district_code varchar(20)  null
+  comment '区编码',
+  version_no    varchar(20)  null
+  comment '版本号',
+  create_time   datetime     null
+  comment '创建时间',
+  update_time   datetime     null
+  comment '最后更新时间'
+)
+  comment '街道基础表'
+  charset = utf8;
+
+create index idx_district_code
+  on mims_t_town (district_code);
+
+create index idx_town_code
+  on mims_t_town (town_code);
+
+多仓库存
+http://mimmsit.cnsuning.com/mimm/commodity/inventory/queryWarehouseCommodity.action
+
+厂送商品活动维护
+http://mimmsit.cnsuning.com/mimm/inventoryBack/queryActivityCommodityLog.action
+
+多仓商户优先级
+http://mimmsit.cnsuning.com/mimm/multwarehouse/jumpMultiWareHouseProPage.action
+jumpMultiWareHouseProPage
+
+
+http://mimmsit.cnsuning.com/mimm/townDy/queryTownDyInfo.action
+
+queryTownDyInfo.action
+deleteOneTownDyInfo.action
+
+街道基础表
+街道编码 townCode
+街道名称 
+分区编码
+
+townInfo.townCode!''}
+townInfo.townName!''}
+townInfo.districtCode!''
+townInfo.versionNo!''
+townInfo.createTime!''
+townInfo.updateTime!''
+
+
+create table mims_t_town_dy
+(
+  id            bigint auto_increment
+  comment '主键ID'
+    primary key,
+  town_code     varchar(20)  null
+  comment '街道编码',
+  town_name     varchar(200) null
+  comment '街道名称',
+  district_code varchar(20)  null
+  comment '区编码',
+  create_time   datetime     null
+  comment '创建时间',
+  update_time   datetime     null
+  comment '更新时间'
+)
+                            <td>${townInfo.townCode!''}</td>
+                            <td>${townInfo.townName!''}</td>
+                            <td>${townInfo.districtCode!''}</td>
+                            <td>${townInfo.createTime!''}</td>
+                            <td>${townInfo.updateTime!''}</td>
+
+
+http://lw.cnsuning.com/mimm/townDy/queryTownDyInfo.action
+
+
+解决异常：
+jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [select            id as "id",            town_code as "townCode",            town_name as "townName",            district_code as "districtCode",            create_time as "createTime", 
+
+  where 1 = 1 sql拼接的问题
+
+like模糊查询
+2023-11-08 20:03:48.443 [http-nio-80-exec-10] DEBUG c.s.f.d.c.s.e.MappedSqlExecutor -Executing prepared SQL statement [select count(id)             from mims_t_town_dy             where 1 = 1                                                       AND town_name = like concat('%',?)                                  ]
+
+
+yesClose
+jQuery弹窗
+
+删除数据不用主键删除，用普通显示在页面上的多个字段作为条件删除
+
+-- auto-generated definition
+create table mims_t_town_dy
+(
+  id            bigint auto_increment
+  comment '主键ID'
+    primary key,
+  town_code     varchar(20)  null
+  comment '街道编码',
+  town_name     varchar(200) null
+  comment '街道名称',
+  district_code varchar(20)  null
+  comment '区编码',
+  create_time   datetime     null
+  comment '创建时间',
+  update_time   datetime     null
+  comment '更新时间'
+)
+  comment '街道基础表'
+  charset = utf8;
+
+create index idx_district_code
+  on mims_t_town_dy (district_code);
+
+create index idx_town_code
+  on mims_t_town_dy (town_code);
+
+哥 这边mims_t_town_dy表town_code重复挺多的 我本想按照town_code这个字段进行删除、更新
+
+前端无法传递townCode?
+<td name="townCode">${townInfo.townCode!''}</td>            
+var townCode = $(this).parents('tr').find("td[name='townCode']").html();
+
+http://mimmsit.cnsuning.com/mimm/inventoryBack/queryActivityCommodity.action
+
+我的抖音town问题：
+操作人字段缺少
+
+HSSFWorkbook
+
+apache工具类
+package org.apache.commons.collections;
+
+
+
+
+
+
+
+
+

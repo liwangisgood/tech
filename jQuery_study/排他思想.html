@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/jquery-3.3.1.min.js"> </script>
+
+    <script>
+        $(function () {
+            $('button').click(function () {
+                // 点击的变色
+                $(this).css('background', 'hotpink');
+                // 排除其他已经变色的
+                $(this).siblings('button').css('background', '');
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+    <button>点我变色</button>
+</body>
+
+</html>
