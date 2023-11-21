@@ -9,7 +9,11 @@ set 类似Java HashSet 无序 不重 查找快 支持交集、并集、差集
 应用场景
   缓存 计数器 分布式会话 排行榜 最新列表 分布式锁 消息队列
   用什么类型？
- 
+sortedset
+  zadd,zrem,zscore,zrank,zrevrank,,zcard,zcount,zincrby,zrange,zrangebyscore,zdiff,zinter,zunion
+redis客户端
+  jedis,lettue,redisson,java-redis-client,vertx-redis-client
+  spring-data-redis：兼容jedis lettuce
 Redis6.0之前为什么不用多线程？
 1、使用Redis、 CPU不是瓶颈，受制内存、网络
 2、提高Redis, Pipeline (命令批量)每秒100万个请求
@@ -30,3 +34,29 @@ Redis命令不适用数据分区。
 数据分区，无法解决热点读/写的问题。
 数据倾斜、重新分配、扩容、缩容，更加复杂。
 多线程任务分摊到Redis同步IO中读写 负载。
+
+Jedis 与 Redisson 对比有什么优缺点？
+  Jedis 是 Redis 的 Java 实现的客户端，其 API 提供了比较全面的 Redis 命
+  令的支持；Redisson 实现了分布式和可扩展的 Java 数据结构，和 Jedis 相
+  比，功能较为简单，不支持字符串操作，不支持排序、事务、管道、 分区等
+Redis 特性。
+Redisson 的宗旨是促进使用者对 Redis 的关注分离，从而让使用者能够将精
+力更集中地放在处理业务逻辑上。
+
+SpringDataRedis
+  1、整合Jedis Lettuce
+  2、提供RedisTemplate
+  3、发布与订阅
+  4、哨兵与集群
+  5、基于Lettuce响应式编程
+  6、基于JDK、JSON、字符串、Spring对象序列化
+  7、JDKCollection
+
+
+
+
+
+
+
+
+
