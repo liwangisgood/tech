@@ -52,6 +52,23 @@ SpringDataRedis
   6、基于JDK、JSON、字符串、Spring对象序列化
   7、JDKCollection
 
+SpringDataRedis使用步骤
+  1、引入spring-boot-starter-data-redis、连接池依赖
+  2、application.yml配置Redis信息 ip port password 连接池信息
+  3、注入RedisTemplate 默认key value jdk序列化处理 1、可读性差 2、内存占用大(和直接rdm操作相比)
+	     为什么需要用StringRedisTemplate 而不是RedisTemplate？
+		RedisTemplate两种序列化时间方案：1、自定义RedisTemplate 2、使用StringRedisTemplate
+                             需要key转string value转json(redis序列化json，反序列化Object空间占用额外)  通过是指RedisTemplate key value的序列化内容来做
+	             最后以上解决不需在自己定义序列化器：反而用StringRedisTemplate 就可以实现key、value的任意类型String, 如：String、Object
+ 										配合JSON工具
+基于session实现登录
+  1、发送短信验证码，提交并校验手机号->生成验证码->保存验证码到session->发送验证码到用户
+  2、短信验证码登录、注册，提交手机号和验证码->校验验证码->根据手机号查询用户->(不存在则创建新用户，保存到数据库中)->保存用户数据到session
+  3、校验登录状态，请求携带cookie->从session获取用户->没有用户信息未登录拦截请求->放行有用户信息保存用户信息到ThreadLocal
+
+
+          
+
 
 
 
