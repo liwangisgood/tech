@@ -1,0 +1,9 @@
+
+mkdir -p /app/mysql/conf && mkdir -p /app/mysql/data
+docker cp mysql:/etc/my.cnf /app/mysql/conf           centos路径是正确的 
+docker cp mysql:/var/lib/mysql /app/mysql/data
+docker cp mysql:/var/log/mysqld.log /app/mysql/log
+docker cp mysql:/etc/mysql/my.cnf /app/mysql/conf         ubuntu路径  
+s
+
+docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest

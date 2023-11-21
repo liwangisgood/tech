@@ -1,0 +1,2 @@
+
+docker build -t sentinel-dashboard.jar:1.8.1 .

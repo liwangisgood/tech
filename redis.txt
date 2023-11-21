@@ -1,0 +1,32 @@
+redis
+hash
+  hset hget hmget hmset hgetall hkeys hvals hincrby hsetnx
+list 类似Java LinkedList双向链表 有序 可重 插入删除快 查询速度一般，如朋友圈点赞先后顺序、评论列表、视频排行榜系统、榜单的维度
+  lpush rpush lpop rpop lrange  blpop brpop
+set 类似Java HashSet 无序 不重 查找快 支持交集、并集、差集
+  单个集合操作                                        多个集合操作
+  sadd srem scard sismember smembers sinter sdiff sunion
+应用场景
+  缓存 计数器 分布式会话 排行榜 最新列表 分布式锁 消息队列
+  用什么类型？
+ 
+Redis6.0之前为什么不用多线程？
+1、使用Redis、 CPU不是瓶颈，受制内存、网络
+2、提高Redis, Pipeline (命令批量)每秒100万个请求
+3、单线程，内部维护比较低
+4、
+如果是多线程(线程切换、加锁\解锁、导致死锁问题)
+5、
+惰性Rehash (渐进性式的Rehash)
+般的公司，单线程Redis就够了
+Redis6.0之后为什么要引入多线程？
+1、 单线程就够了。 数据->内存响应时间100纳秒。
+比较小的数据包，8w~ 10w QPS (极限值)
+2、大的公司，需要更大QPS，IO的多线程(内部执行命令还
+是单线程)
+3、为什么不采用分布式架构---很大的缺点。
+服务数量多，维护成本很高。
+Redis命令不适用数据分区。
+数据分区，无法解决热点读/写的问题。
+数据倾斜、重新分配、扩容、缩容，更加复杂。
+多线程任务分摊到Redis同步IO中读写 负载。

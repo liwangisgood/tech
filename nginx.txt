@@ -1,0 +1,1 @@
+docker run --privileged --name nginx -it -p 80:80 -v /app/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /app/nginx/conf/default.conf:/etc/nginx/conf.d/default.conf -v /app/nginx/html:/usr/share/nginx/html -v /app/nginx/log:/var/log/nginx -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -d nginx

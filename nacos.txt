@@ -1,0 +1,16 @@
+docker run --name nacos -d -p 8848:8848 --privileged=true --restart=always -e JVM_XMS=256m -e JVM_XMX=256m -e MODE=standalone -e PREFER_HOST_MODE=hostname -v /mnt/nacos/logs:/home/nacos/logs -v /mnt/nacos/conf:/home/nacos/conf -v /mnt/nacos/data:/home/nacos/data nacos/nacos-server:1.4.1
+
+
+
+docker cp nacos:/home/nacos/logs/ /app/nacos/
+docker cp nacos:/home/nacos/conf/ /app/nacos/
+
+
+docker run --name nacos -d -p 8848:8848 --privileged=true --restart=always  -e JVM_XMS=256m -e JVM_XMX=256m -e MODE=standalone  -v /app/nacos/:/home/nacos/logs/ -v /app/nacos/:/home/nacos/conf/ -v /app/nacos/:/home/nacos/data/ nacos/nacos-server:1.4.1
+
+docker run --name nacos -d -p 8848:8848 --privileged=true  -e JVM_XMS=256m -e JVM_XMX=256m -e MODE=standalone nacos/nacos-server:1.4.1
+
+
+docker run --name nacos -d -p 8848:8848 --privileged=true --restart=always  -e JVM_XMS=256m -e JVM_XMX=256m -e MODE=standalone  -v /app/:/home/nacos/ nacos/nacos-server:1.4.1
+
+
