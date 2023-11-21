@@ -10,4 +10,4 @@
   git reflog,git log,git reset --hard
   merge冲突，<<<<HEAD    当前分支数据如：master     ============   合并的分支hot-fix数据   >>>>>> hot-fix
   1、在冲突文件a.txt 删除所有其他符号<<<<   ====    >>>>，或者不想要的数据
-  2、git add a.txt  , git commit -m "conflict merge commit" 不要a.txt文件名（cannot do a partial commit during a merge） , merging状态变为正常
+  2、git add a.txt  , git commit -m "conflict merge commit" 不要a.txt文件名（cannot do a partial commit during a merge） , merging状态变为正常状态
