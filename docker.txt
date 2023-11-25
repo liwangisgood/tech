@@ -1,0 +1,8 @@
+磁盘卷
+  1、创建容器时就进入容器（加不加/bin/bash一样  ）：docker run -it --privileged=true -v /tmp/hostdata : /tmp/docker_data:rw/ro --name=nacos nacos
+  2、docker修改 主机同步获取。主机修改 docker同步获得。docker容器stop 主机修改 docker容器重启后数据依然同步
+  3、echo "dneiw" > a.txt 没有文件创建文件 然后写入里面；有文件会覆盖文件内容
+  4、docker inspect 容器id或容器名。"Source"：为挂载的宿主机目录   
+  "Destination":容器目录。rw默认形式表示容器内的目录是人手动操作容器内可读可写的。 r容器内目录只能读 主机目录内容可同步到容器内      
+  5、
+  
