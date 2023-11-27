@@ -88,3 +88,82 @@ redis session共享问题？
       优：解决一致性哈希算法的容错性，某台机器宕机了，仅仅影响之前已经写入和后续读取该机器的数据，不影响接下来写入和读取的数据(会沿着环某一方向继续向前走)。
           一致性哈希算法的扩展性
       缺：
+
+# 集群结点各节点关系，主节点、从节点
+cluster nodes
+# 已登录节点的信息
+cluster info
+# 集群方式启动
+redis-cli -p 6379 -c
+# 退出redis客户端
+exit
+# 查看集群信息
+redis-cli --cluster check ip:6381
+
+
+主从容错切换迁移
+  主机a宕机从机b变为主机，a机恢复会成为b的从机。若想主机a重新恢复为主机，停掉b机，a机自动恢复为主机，恢复b机即可变为所有故障前的状态机子
+
+主从扩容需求分析(三主三从 变为 四主四从，考虑Hash槽重新分配)
+  # 1、机a为新增的节点，暂时没有槽位
+  redis-cli --cluster add-node 本机a的ip:本机端口 首节点:对应端口
+  # 2、重新分配槽号
+  redis-cli --cluster reshard IP地址(集群create时候第一个的ip):端口号
+  What is the receiving node ID？新加入的机a的id
+  all 是四个机子均分槽位,其他机子各自匀出一点槽位
+  # 3、为新添加机a 添加从机b
+  redis-cli --cluster add-node ip:新slave端口 ip:新master端口 --cluster-slave --cluster-master-id 新主机节点ID
+  
+主从缩容需求分析(四主四从 变为 三主三从，考虑Hash槽重新分配)
+  # 1、删除节点从备用机开始删（不同直接stop 从机）
+  redis-cli --cluster del-node 删除节点ip:port 从机id
+  # 2、重新分配槽号 
+  What is the receiving node ID？谁来接受槽号
+  Source node  node-id 谁来发送槽号(该节点要被删除)
+  # 3、检查集群槽点分配情况（槽位数正常为0）
+  redis-cli --cluster check 集群任意节点ip:对应端口port
+  # 4、删除主节点
+  redis-cli --cluster del-node 原master机ip:该机port
+  redis-cli --cluster check 任意ip:对应port
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
