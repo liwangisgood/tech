@@ -1,0 +1,41 @@
+1、聊聊spring
+
+2、说明bean的生命周期
+
+3、循环依赖
+
+4、三级缓存
+
+5、FactoryBean和beanFactory
+
+6、ApplicationContext和BeanFactory
+
+7、设计模式
+
+
+<bean id="" class=? scope init-method abstract>
+<property name="" value="">
+<property name="" ref="">
+</bean>
+
+<bean id="" class=? scope init-method abstract>
+<constructor-arg name=? value=?>
+<property name=? ref=?>
+</bean>
+提前定义好bean的对象的描述信息xml 或yaml 或json
+抽象接口，定义读取配置文件的规范 BeanDefinitionReader
+bean定义信息 BeanDefinition
+
+Abstract base class for property resource configurers that resolve placeholdersin bean definition property values. Implementations semspulls/em> values from dproperties file or other f@linkplain orgspringframework.core.env.Propertysourceproperty source} into bean definitions .
+修改bean的定义信息需要实现BeanFactoryPostProcessor
+
+实例化Bean
+初始化bean
+BeanFactory：用到反射实例化Bean...
+
+
+实例化：在堆中开辟一块空间属性都是默认值
+初始化；给属性完成赋值操作(1、填充属性，赋值 2、调用具体的初始化方法)
+
+new ClassPathXmlApplicationConext("applicationContext.xml")
+底层通过反射创建容器对象
