@@ -30,7 +30,12 @@ Abstract base class for property resource configurers that resolve placeholdersi
 修改bean的定义信息需要实现BeanFactoryPostProcessor
 
 实例化Bean
+填充属性
+BeanPostProcessor:before (1、增强器 2、后置处理器) aop(动态代理)
 初始化bean
+执行init方法
+BeanPostProcessor:after   aop(动态代理)
+完成bean对象
 BeanFactory：用到反射实例化Bean...
 
 
@@ -39,3 +44,31 @@ BeanFactory：用到反射实例化Bean...
 
 new ClassPathXmlApplicationConext("applicationContext.xml")
 底层通过反射创建容器对象
+
+Environment接口为了方便使用，在容器创建的时候会提前加系统的相关属性加载到StandardEnvironment
+
+
+refresh
+
+BeanFactory 叫DefaultListableBeanFactory
+
+beanFactory 被applicationContext继承
+DefaultListableBeanFactory存放所有的bean
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
