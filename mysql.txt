@@ -128,3 +128,31 @@ start slave;
           成功的：
             Slave_IO_Running: Connecting
             Slave_SQL_Running: Yes
+
+
+MySQL日志之bin log？
+https://zhuanlan.zhihu.com/p/639926919
+二进制日志，逻辑日志记录DDL、DML(不包含没有修改数据的语句select show)
+优点：1、数据恢复：DBA打交道，故障恢复  2、数据复制：数据备份、集群高可用、读写分离
+缺点：1、主从复制数据冗余
+记录格式：
+    statement：记录更新操作的SQL
+    row：记录数据被修改的详细情况
+    mixed：
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
