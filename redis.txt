@@ -126,6 +126,9 @@ redis-cli --cluster check ip:6381
   redis-cli --cluster del-node 原master机ip:该机port
   redis-cli --cluster check 任意ip:对应port
 
+Redis集群主从复制？
+https://www.cnblogs.com/wanghuizhao/p/17481632.html
+
 Redis为什么那么快？
 网络：多路复用设计，提升整体并发处理连接数，Server端的所有IO操作都主线程
 CPU
@@ -135,9 +138,21 @@ redis过期了为什么内存没释放？
 1、
 set name liwang ex 120
 set name liwang1 key过期时间被擦除
-2、
+2、redis对过期key读写时惰性删除、定时删除(可能会出现部分key已经过期但没有被处理掉的情况)
 
+redis key没设置过期时间为什么被redis主动删除了？
+超过内存限定，出发主动清理策略
+内存淘汰策略
 
+redis主从、哨兵、集群架构优缺点比较？
+https://baijiahao.baidu.com/s?id=1763613487831111392&wfr=spider&for=pc
+redis主从：
+    优点：1、可靠性：主服务器故障从服务器恢复数据 2、从服务器分担主服务器读压力 提升系统吞吐量和响应速度 3、简单易用slaveof命令和配置文件实现主从复制 4、适用于读多写少场景
+    缺点：1、主从复制不能扩展写性能，所有的写操作都在主节点
+
+redis集群：
+    优点：1、自动故障转移 2、适用于读写比较频繁 读写分离 负载均衡
+    缺点：2、
 
 
 

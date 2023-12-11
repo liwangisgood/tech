@@ -18,24 +18,36 @@
 <property name="" ref="">
 </bean>
 
-<bean id="" class=? scope init-method abstract>
+<bean id="dataSource" class=? scope init-method abstract>
 <constructor-arg name=? value=?>
-<property name=? ref=?>
+<property name=username ref=${jdbc.username}>
 </bean>
-提前定义好bean的对象的描述信息xml 或yaml 或json
+bean的定义信息xml 或 注解
 抽象接口，定义读取配置文件的规范 BeanDefinitionReader
-bean定义信息 BeanDefinition
-
+从BeanFactory体系获取，bean定义信息BeanDefinition
+接口BeanFactoryPostProcessor完成${jdbc.username}值的替换，可以实现这个接口 获取和设置BeanDefinition
+最终的BeanDefiniton对象
 Abstract base class for property resource configurers that resolve placeholdersin bean definition property values. Implementations semspulls/em> values from dproperties file or other f@linkplain orgspringframework.core.env.Propertysourceproperty source} into bean definitions .
 修改bean的定义信息需要实现BeanFactoryPostProcessor
 
-实例化Bean
-初始化bean
+<property name=username ref=${jdbc.username}>实例化对象前属性值全部替换
+创建对象
+    实例化Bean：在堆中开辟一块空间，属性都是默认值
+    初始化bean：给属性完成赋值操作(1、填充属性，赋值 2、调用具体的初始化方法3、扩展实现)
 BeanFactory：用到反射实例化Bean...
 
 
-实例化：在堆中开辟一块空间属性都是默认值
-初始化；给属性完成赋值操作(1、填充属性，赋值 2、调用具体的初始化方法)
+BeanFactoryPostProcessor 子类 BeanDefinitonRegistryPostProcessor 子类 ConfigurationClassPostProcessor----->springboot自动装配原理
+BeanPostProcessor（执行前置处理方法、执行初始化调用方法、执行后置处理方法）
+AOP是IOC的一个扩展
 
 new ClassPathXmlApplicationConext("applicationContext.xml")
 底层通过反射创建容器对象
+DefaultListableBeanFactory 属性值 beanDefinitionNames beanDefinitionMap(要创建的bean的信息)
+
+循环依赖？
+spring解决循环依赖问题、三级缓存(singletonObjects一级缓存 singletonFactories三级缓存 earlySingletonObjects二级缓存)、提前暴露对象
+根本：实例化和初始化分开来操作
+ObjectFactory 函数式接口 
+getBean->doGetBean->createBean->doCreateBean->createBeanInstance->populateBean
+getBean到容器中查找是否已经创建过该对象
