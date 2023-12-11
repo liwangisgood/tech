@@ -1,0 +1,2 @@
+AQS
+  CAS、Node(waitStatus、pre、next、thread)、state(同步状态)
