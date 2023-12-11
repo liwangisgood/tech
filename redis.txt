@@ -126,6 +126,16 @@ redis-cli --cluster check ip:6381
   redis-cli --cluster del-node 原master机ip:该机port
   redis-cli --cluster check 任意ip:对应port
 
+Redis为什么那么快？
+网络：多路复用设计，提升整体并发处理连接数，Server端的所有IO操作都主线程
+CPU
+内存
+
+redis过期了为什么内存没释放？
+1、
+set name liwang ex 120
+set name liwang1 key过期时间被擦除
+2、
 
 
 
