@@ -126,6 +126,19 @@ redis-cli --cluster check ip:6381
   redis-cli --cluster del-node 原master机ip:该机port
   redis-cli --cluster check 任意ip:对应port
 
+docker 配置redis主从，哨兵sentinel
+docker run --restart=always \
+-p 6380:6380 \
+--name redis_master1 \
+-v /app/redis_master1/redis.conf:/etc/redis/redis.conf \
+-v /app/redis_master1/data:/data \
+-d redis:7.0.12 redis-server /etc/redis/redis.conf
+
+docker run --restart=always \
+-p 6380:6380 \
+--name redis_master1 \
+-d redis:7.0.12
+
 Redis集群主从复制？
 https://www.cnblogs.com/wanghuizhao/p/17481632.html
 
