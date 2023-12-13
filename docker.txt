@@ -1,8 +1,33 @@
 磁盘卷
   1、创建容器时就进入容器（加不加/bin/bash一样  ）：docker run -it --privileged=true -v /tmp/hostdata : /tmp/docker_data:rw/ro --name=nacos nacos
+(1)ro表示不能docker exec打开容器直接手动修改挂载目录 否则爆出Read-only file system
+(2)默认rw
+(3)挂载：主机目录：容器目录
   2、docker修改 主机同步获取。主机修改 docker同步获得。docker容器stop 主机修改 docker容器重启后数据依然同步
   3、echo "dneiw" > a.txt 没有文件创建文件 然后写入里面；有文件会覆盖文件内容
   4、docker inspect 容器id或容器名。"Source"：为挂载的宿主机目录   
   "Destination":容器目录。rw默认形式表示容器内的目录是人手动操作容器内可读可写的。 r容器内目录只能读 主机目录内容可同步到容器内      
-  5、
-  
+ 
+docker容器卷共享
+  数据备份 持久化  共享和重用数据
+docker cp 容器id:容器内路径 目的主机机器
+
+容器卷之间的继承
+    docker run -it --privileged=true -v --volumes-from u1 --name=nacos nacos
+    继承只是规则的继承，容器的停止删除不影响容器继承
+docker compose
+  核心：1、文件docker-compose.yml 2、服务service、工程project
+
+是什么：Docker官方推出 的一个工具软件
+管理多个Docker容器组成的一个应用，YAML格式的配置文件：docker-compose.yml
+
+
+
+
+
+11月29号 2点37完成入室 离岗半个小时左右 因感冒有点难受 出去透了透气。我认识到我不该离岗，是我的失职问题，甘愿收到集团的惩戒，我会认真检讨自己。 
+
+我也不清楚走的哪个闸机有点迷 
+
+应该是出去的闸机为2.37，记录为进去的闸机好像没记录 
+
