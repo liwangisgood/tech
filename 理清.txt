@@ -303,10 +303,146 @@ apache工具类
 package org.apache.commons.collections;
 
 
+2023/11/15
+上午
+datagrip软件设置正常使用
+学习养老二期移动端业务逻辑待测试检验系统
+mybtisplus一些方法 注解学习查看
+
+
+下午
+http://d.svndoc.cnsuning.com/svn/zyyl/0养老二期移动端/1.4系统测试 
+
+cookie优缺点
+authorization
+
+nginx优缺点
+
+Connection: keep-alive 
+	组件缓存 避免组件内数据成
 
 
 
+redis
+redis持久化 aof rdb
+布隆过滤器
+  优点：
+  1、空间和时间巨大优势(存储和插入时间都是常数)，无需像map set存储元素本身，
+  2、散列函数相互见没关系，并行执行。
+  缺点：
+  1、含有错误率 插入元素越多误错率越大
+  2、无法从过滤器删除数据
+
+key的结构
+  层级格式 项目名：业务名：类型：id
+'{"name": "John","age": 30,"city": "New York","isStudent": false,"grades": [95, 88, 72],"address": {"street": "123 Main St","zipCode":"10001"},"isActive": null}'
+
+'{"name": "John","age": 30,"city": "New York"}'
+ 缺点：json修改数据，只能重新覆盖，不能针对某一字段修改
+string
+  set get mset mget decr decrby incr incrby setnx setbit setex
+hash
+  hset hget hmset hmget hgetall hkeys hvals hincrby hsetnx
+  heima:user:1 field value
+                      name Jack
+                      age    21
+允许对单个字段修改
+ hset hiema
+
+
+sso.admin.auth-status-url=http://lwmimmpre.cnsuning.com/authStatus
+
+sso.auth-status-url=https://lwmimspre.cnsuning.com/mims/authStatus
+#######
+sso.admin.auth-status-url=http://lwscpmsit.cnsuning.com/scpm/authStatus
+
+sso.auth-status-url=https://lwscpcsit.cnsuning.com/scpc/authStatus
+
+
+月度总结报告
+
+  重点工作：
+  内容及目标：
+1、完成开发环境的搭建
+2、熟悉开发框架及开发语言（java、mysql、vue等）
+3、根据现有的开发规范编写demo
+
+  日常工作：
+  内容及目标
+1、学习现有项目代码及文档
+2、熟悉相应业务流程
 
 
 
+熟悉了 mims（商家库存管理系统），在此系统编写了demo 
+SCPC（ 供应链协同系统），熟悉1219版本的需求，正在进行相关开发 
+1、
+
+
+
+分配了小功能页面，写了一些功能代码与bug，但最终也已解决。提高了问题解决能力与自我思考，多尝试独立自己解决问题，不懂的再去请教。让我回到了本专业的内容上不至于生疏。两个周日到建邺门店轮岗，在南京这边也感受到了终端的幸苦与不容易，零售行业面临很多挑战，在如今互联网便捷的现实。建邺苏宁宜家，在线下实体中，在闹市，生活餐饮区人流量大地方，家电布展还是很吸引力的。
+
+
+总部轮岗在供应链部门
+重点工作 内容及目标：
+(1)、完成开发环境的搭建
+(2)、熟悉开发框架及开发语言（java、mysql、vue等）
+(3)、根据现有的开发规范编写demo
+日常工作 内容及目标:
+(1)、学习现有项目代码及文档
+(2)、熟悉相应业务流程
+部门所做工作：
+
+(1)熟悉供应链内部项目mims（商家库存管理系统），框架后端Spring、MySql等、前端FreeMarker,并在此基础上写了抖音街道demo， 增、删、改、查、导入、导出接口与前端页面顺利编写完成与通过自测，现已发布；
+
+(2)部门需求着手测试，将BUG反馈给开发，协调开发求助产品解决，提高整体进度；
+
+(3)熟悉内部供应链内部项目SCPC（ 供应链采购协同系统），框架Spring、MySql等、前端FreeMarker,熟悉1219版本的需求，开发完成物流下发退厂产能的后端接口功能；
+
+(4)周日在建邺苏宁宜家门店轮岗学习产品知识，接待顾客购买家电，了解门店业务工作；
+(5)周一~周五晚上接受体系内课程培养与集团课程培养，提高了专业技术能力认知与业务知识。
+
+
+http://scpcsit.cnsuning.com/scpc/returnCollaborationBook/toAppointmentPage.action
+14042999@cnsuning.com
+abc12345
+
+
+C:\Windows\System32\drivers\etc
+127.0.0.1 lwmimmpre.cnsuning.com
+127.0.0.1 lwmimspre.cnsuning.com
+127.0.0.1 lwscpmsit.cnsuning.com
+127.0.0.1 lwscpcsit.cnsuning.com
+
+SCPC供应采销协同系统
+商家端scpc_web
+http://lwscpcsit.cnsuning.com/scpc/newPurchaseOrder/appointOrderDetail.action?orderId=SCPC2017080800000001
+“已入库数量”=该预约单+采购单+行号为主键的对应已入库数量
+“预约状态”状态=预约单+采购单+行号对应的状态
+“剩余可入库数量”=当预约状态为预约成功、取消预约中、过期取消中时，预约入库数量-已入库数量；当预约状态为已取消、已过期时默认为0
+# 查询预约单头信息 order_id 预约单号',
+scpc_t_purchase_storage
+
+# 查询预约单商品信息 order_id 预约单号',
+scpc_t_purchase_storage_commodity  
+scpc_t_purchase_order_detail(采购订单明细表)
+	查b.external_ean_code as "eanCode",
+      b.unit as "unit"
+	关联条件：
+	  order_code            varchar(20)                   null comment '订单号',
+      item_no               varchar(10)                   null comment '订单行号',
+
+supplierCode 10000197 mod 16 = 5 
+
+253994000 
+
+orderId SCPC2017080800000001 
+难点：梳理各个表之间
+
+http://scpcsit.cnsuning.com/scpc/newPurchaseOrder/newPurchaseToDeliverList.action
+
+
+1、物流下发退厂产能 2、重发功能，对表scpc_t_return_task行字段设置状态status 0 1 2,定时任务后台会去查询调度重发。
+
+物流下发退厂产能信息：退货信息维护在物流系统 现在要转到SCPC（ 供应链采购协同系统）进行管理和使用，接收信息区分退厂产能信息(良品退仓、不良品退仓、退仓标识、不良品返厂维修)，保存到SCPC数据库中(根据标识需求) 
 
