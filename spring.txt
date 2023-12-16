@@ -65,22 +65,119 @@ DefaultListableBeanFactory存放所有的bean
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 DefaultListableBeanFactory 属性值 beanDefinitionNames beanDefinitionMap(要创建的bean的信息)
 
 循环依赖？
 spring解决循环依赖问题、三级缓存(singletonObjects一级缓存 singletonFactories三级缓存 earlySingletonObjects二级缓存)、提前暴露对象
 根本：实例化和初始化分开来操作
 ObjectFactory 函数式接口 
-getBean->doGetBean->createBean->doCreateBean->createBeanInstance->populateBean
+getBean->doGetBean->createBean->doCreateBean->createBeanInstance->populateBeans
 getBean到容器中查找是否已经创建过该对象
+
+
+周瑜spring高级底层源码2022最新版
+https://www.bilibili.com/video/BV1tR4y1F75R/?p=2&spm_id_from=pageDriver&vd_source=a624d5626dc0011dc56bfc4cc466feb4
+手写模拟Spring-周瑜
+    容器启动
+    BeanDefinition扫描
+    Bean的生命周期
+    单例与多例Bean
+    依赖注入
+    AOP
+    Aware回调
+    初始化
+    BeanPostProcessor
+    
+Spring底层原理-周瑜
+    Bean生命周期
+    推断构造方法
+    依赖注入
+    @PostConstrct
+    初始化前
+    初始化
+    初始化后
+    AOP
+    Spring事务
+    @Configuration
+    循环依赖
+    Spring整合Mybatis
+
+spring自定义容器：
+    puclic class XxxApplicationContext{
+        Class confiClass
+        ConcurrentHashMap<String,Beandefinition> beanDefinition
+        ConcurrentHashMap<String,Object> singletonObjects
+        ArrayList<BeanPostProcessor> beanPostPrcessor
+    }
+
+  1、扫描--->BeanDefinition-->beanDefinitionMap
+  2、实例化Bean createBean(String beanName,BeanDefinition beanDefinition)
+    从beanDefinitionMap中获取beanDefinition
+    单例bean:singletonObjects中有则返回，无则createBean(String beanName,BeanDefinition beanDefinition)
+    多例bean:每次都会createBean(String beanName,BeanDefinition beanDefinition)
+    为bean配置beanName,System.out.println(applicationContext.getBean("userService"))
+        1、自定义@Component("userService")在类UserService，反射创建bean获取beanName值
+        2、自定义@Component在类UserService，反射获取类名UserService,beanName=Introspector.decapitalize(clazz.getSimpleName());//类名改为小驼峰userService
+    使的测试spring bean获取bean对象 并打印输出
+    
+    管理类中属性注入其他bean
+        自定义@Autowired 实现依赖注入
+            createBean(String beanName,BeanDefinition beanDefinition){} 反射.newInstance()实例化bean
+            clazz.getDeclaredFields(){}//判断字段Field f是否有注解 f.isAnnotationPresent(Autowired.class)
+            // 简单版依赖注入
+            for(Field f:clazz.getDeclaredFields()){
+                if(f.isAnnotationPresent(Autowired.class)){
+                    f.setAccessible(true);
+                    f.set(instance,getBean(f.getName()));
+                }
+            }
+            // 属性填充的问题：
+                // Aware回调 还有很多其他类型回调 思路差不多，如：applicationContext beanFactory 
+                // 初始化InitializingBean 初始化后AOP(BeanPostProcessor)
+            if(instance instanceof BeanNameAware){
+                ((BeanNameAware)instance).setBeanName(beanName);
+            }
+    手写BeanPostProcessor接口,
+        @Component//使之成为一个bean
+        public class XxxxBeanPostProcessor implements BeanPostProcessor{
+            @Override
+            public void postProcessBeforeInitialization(String beanName,Object bean){
+                //自定义代码
+            }
+            @Override
+            public void postProcessAfterInitialization(String beanName,Object bean){
+                //自定义代码
+            }
+        }
+        
+        具体使用为每一个创建的bean进行初始化操作
+            // 扫描Component注解
+            if(clazz.isAnnotationPresent(Component.class)){
+                if(BeanPostprocessor.class.isAssignableFrom(clazz)){
+                    BeanPostProcessor instance =(BeanPostProcessor)clazz.newInstance();
+                    beanPostProcessorList.add(instance);
+                }
+            }
+            for(BeanPostProcessor beanPostProcessor : beanPostProcessorList){
+                beanPostprocessor.postProcessBeforeInitialiation(beanName,instane);
+            }
+            
+            for(BeanPostProcessor beanPostProcessor : beanPostProcessorList){
+                beanPostprocessor.postProcessAfterInitialiation(beanName,instane);
+            }
+
+    步骤：依赖注入->Aware回调->postProcessBeforeInitialization(beanName,instance)->初始化->postProcessAfterInitialization(beanName,instance)  
+    jdk动态代理转换为的类型 接口类型，不能转换为实现类类型。
+        如用postprocessorAfterInitialization(){
+            //实现jdk动态代理接口,执行单个方法，方法前后可执行其他业务逻辑(aop功能
+        }
+    
+idea项目out目录获取不包含包名：
+ClassLoader classLoader=类名.class.getClassLoader();
+path="com/zhouyu/service";//包名：com.zhouyu.service
+URL resource=classLoader.getResource(path);
+File file=new File(resource.getFile());
+
+Class clazz=classLoader.loadClass("com.zhouyu.service");
+
+断点调试resume，可以跳到下一个标记的断电代码，跳出内部框架代码
