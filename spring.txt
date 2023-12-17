@@ -2,9 +2,40 @@
 
 2、说明bean的生命周期
 
-3、循环依赖
+3、循环依赖-->提前进行AOP
+    1Aservice代理对象.target = Aservice普通对象
+    2之前都说了，AOP产生的代理对象，不能放入单例池（一级缓存），所以才二级缓存。
+    代理对象创建完后就存入代理对象中，
+    3代理对象最重要的是执行切面逻辑,切面执行完后 会执行target对象的对应的普通方法
+    4需要普通对象才能得到AOP代理对象的
+    没有AOP的IOC的话，确实二级缓存就够了，有AOP的话如果提前发生AOP就需要再多一层缓存，大概这个意思吧
+    
+    0、creatingSet<'AService'> CreatingSet是几级缓存啊? CreatingSet只是用来存放正在实例化的bean的名字，并不是缓存
+    1、实例化-->Aservice普通对象-->singletonFactories.put('AService'，AService普通对象)
+    2、填充bService--->单例池Map--->创建BService
+        BService的Bean的生命周期
+        2.1.实例化-->普通对象-->singletonFactories.put('AService',()-> getEarlyBeanReference(beanName，mbd，AService普通对象))出现循环依赖才会被用到
+        2.2.填充aService--->单例池Map-->creatingSet-->Aervice出现了循环依赖-->earlySingletonObjects-->singletonFactories-->lambda-->执行lambda-->AOP-->AService代理对象-->earlySingletonObjects
+        2.3.填充其他属性
+        2.4.做一些其他的事情 (AOP)
+        2.5.添加到单例池
+        
+    3、填充其他属性
+    4、做一些其他的事情(AOP)-->AService代理对象
+        earlySingletonObjects.get("AService")
+    5、添加到单例池
+    6、creatingSet.remove("AService")
+    
 
 4、三级缓存
+    类DefaultSingletonBeanRegistry
+    三级缓存
+        第一级缓存:singletonObjects ConcurrentHashMap<String,Object>()
+            保存bean完整生命周期的对象
+        第二级缓存:earlySingletonObjects ConcurrentHashMap<String,Object>()
+            应对可能出现的循环依赖，提前产生的代理对象保存到二级缓存中
+        第三级缓存:singletonFactories HashMap<String,ObjectFactory>()
+            创建某一bean过程中，创建lambda表达式保存到三级缓存中，源码中然后属性填充 初始化前  初始化 初始化后
 
 5、FactoryBean和beanFactory
 
