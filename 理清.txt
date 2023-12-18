@@ -393,8 +393,30 @@ SCPC（ 供应链协同系统），熟悉1219版本的需求，正在进行相�
 (2)、熟悉相应业务流程
 部门所做工作：
 
-(1)熟悉供应链内部项目mims（商家库存管理系统），框架后端Spring、MySql等、前端FreeMarker,并在此基础上写了抖音街道demo， 增、删、改、查、导入、导出接口与前端页面顺利编写完成与通过自测，现已发布；
-
+(1)熟悉供应链内部项目mims（商家库存管理系统），框架后端Spring、MySql等、前端FreeMarker,并在此基础上写了抖音街道demo， 增、删、改、查、导入、导出接口与前端页面顺利编写完成与通过自测，现已发布；http://mimmpre.cnsuning.com/mimm/townDy/queryTownDyInfo.action
+  大道至简、：具体，1、不要在循环里写sql；
+                    2、减少与数据库交互；
+                    3、批量操作数据，batchUpdate() 批量删除根据townCode in (1,2,3,4)
+                      原理：batchUpdate() 
+  'a1','a2','a3'
+    <sql id="deleteTownDyByCodes">
+        <![CDATA[
+            delete from
+                mims_t_town_dy
+            WHERE
+            <#if townCodes?? && townCodes != ''>
+                town_code in (${townCodes})
+            <#else>
+                1 = 2
+            </#if>
+        ]]>
+    </sql>
+        Map<String,Object> deleteMap = new HashMap<>();
+        deleteMap.put("townCodes", CommonUtils.arrayToSqlInStr(paramList,"townCode"));
+        CommonUtils.arrayToSqlInStr(paramList,"townCode")工具类
+          List<Map<String,Object>> --> List<String> --> String[] --> 例如:['a01','a02','a03']=('a01','a02','a03')
+            StringBuffer拼接数组字符串
+        
 (2)部门需求着手测试，将BUG反馈给开发，协调开发求助产品解决，提高整体进度；
 
 (3)熟悉内部供应链内部项目SCPC（ 供应链采购协同系统），框架Spring、MySql等、前端FreeMarker,熟悉1219版本的需求，开发完成物流下发退厂产能的后端接口功能；
@@ -460,12 +482,56 @@ http://scpcsit.cnsuning.com/scpc/newPurchaseOrder/newPurchaseToDeliverList.actio
 
 断点调试进入了调用数据库dao操作 入了动态代理 一层接一层 出不来了
 
-
+其他页面跳转过来的
+http://scpcsit.cnsuning.com/scpc/newPurchaseOrder/appointOrderDetail.action?orderId=SCPC2023120708505185
 简单就是为预约单添加已入库数量、预约状态、剩余可入库数量在前端显示，字段有要求根据需求文档。 
 status varchar(10) null comment '预约单行状态:10待审核;20预约成功;30已拒绝;40预约失败;50已取消;51取消预约中;52过期取消中;60已入库;70已过期;' 
 FROM
 ${mod('scpc_t_purchase_storage', supplierCode,16)} freemarker模板语法分库操作
 
+new/newPurchase/newPurchaseToDeliver.ftl
+  select下拉列表，进行选择onchange就会触发
+根据条件查询家乐福采购订单分页信息
+  scm管理分片配置
+    resources/ids.redis.xml
+
+new/newPurchase/newPurchaseToDeliver.ftl
+  select下拉列表，进行选择onchange就会触发
+根据条件查询家乐福采购订单分页信息
+  scm管理分片配置
+    resources/ids.redis.xml
+    supplierCode：10000197 mod 16 =5 
+      预约单商品表5 scpc_t_purchase_storage_commodity5 m
+      采购订单头表5 scpc_t_purchase_order5 o
+      采购计划预约单表5 scpc_t_purchase_storage5 s
+      系统规则表 scpc_t_rule b
+        o.order_code = :orderCode 预约单号
+        AND o.order_code in (${queryOrders})
+        AND o.order_type = b.rule_code
+        status            varchar(4)             null comment '预约单状态:10待审核20预约成功30已拒绝40预约失败50已取消60已入库71过期未收货72过期已收货I改期取消中;',
+        
+        o createBusinessType  订单业务类型
+        收货地点
+          min(o.plant_name) AS plantName, 地点名称
+          min(o.store_code) AS plantCode, 地点编码
+        预约单号
+          MIN(o.book_order_type) AS bookOrderType, 自动预约标识1无需预约,2自动预约3普通
+          MIN(s.tc_flag) AS tcFlag,  tc转运单标记
+
+
+写sql有什么关注点
+  写sql  写业务层访问数据库 
+  
+      
+      
+
+
+
+
+
+
+苏宁内部框架使用指南：
+http://wiki.cnsuning.com/pages/viewpage.action?pageId=39054475
 定时任务：duts
 远程框架：rsf
 消息队列：windq
@@ -494,4 +560,30 @@ WindQ通过了异步处理允许你把一个消息放入队列，但不用立即
 统一配置管理SCM
   配置修改后，会自动推送修改，我理解的是，配合消息队列 监听器 一旦监听就会执行如同消费者
   
-  框架只是一个个成熟的工具，不是更应该学些底层原理S
+  框架只是一个个成熟的工具，不是更应该学些底层原理
+  
+  
+  
+  
+  
+  
+  
+  
+Java基础工具：
+package org.apache.commons.collections;
+  MapUtils
+    String orderCode = MapUtils.getString(params, "orderCode", "");
+    public static String getString(final Map map, final Object key)
+
+org.apache.commons.lang.StringUtils
+  StringUtils.isEmpty(supplierCode)
+org.apache.commons.lang.ArrayUtils
+  if (ArrayUtils.isEmpty(array)){}
+  
+  StringBuilder为什么线程不安全?
+    【为什么StringBuilder线程不安全？ - CSDN App】http://t.csdnimg.cn/w6AGx
+
+
+
+    
+    
