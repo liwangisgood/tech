@@ -210,5 +210,4 @@ URL resource=classLoader.getResource(path);
 File file=new File(resource.getFile());
 
 Class clazz=classLoader.loadClass("com.zhouyu.service");
-
 断点调试resume，可以跳到下一个标记的断电代码，跳出内部框架代码
