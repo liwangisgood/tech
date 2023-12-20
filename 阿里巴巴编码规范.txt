@@ -1,19 +1,21 @@
-插件：https://blog.csdn.net/n1355553344/article/details/89915091?ops_request_misc=&request_id=&biz_id=102&utm_term=notepad++%E5%93%AA%E4%BA%9B%E5%A5%BD%E7%94%A8%E6%8F%92%E4%BB%B6&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-5-89915091.142^v73^control,201^v4^add_ask,239^v2^insert_chatgpt&spm=1018.2226.3001.4187
-一、主要问题及原因分析
-1、对理论学习的重要性认识不足，学习主动性不高，重视不够，缺乏钻研精神，不能很好理论联系实际，有时把工作当作负担，缺乏进取担当精神。
-2、组织协调能力不够。在学习和工作中，我的组织协调能力较差。遇到问题不冷静，缺乏与老师和上级沟通，不够严谨，不能及时找到有效的解决问题的方法，这极大地影响了我的工作效率。
+数据库
+工程结构
+鉴权
 
-3、工作积极性有待加强。有时会有“拖延”和“慢下来”的惯性情绪，有时会导致工作拖拖拉拉，过于注重工作处理的快，忽略工作质量。
-
-
-二、整改措施和今后努力方向
-1、加强政治理论学习，提高思想认知。理论建设是党的建设根本，理论素质是思想政治的灵魂，用先进的理论武装头脑，指导实践提高自觉性、积极性。以务实的态度，树立正确的世界观、人生观、价值观，认真履行党章规定义务，增强自己的政治意识，在思想上和行动上同党的组织保持高度一致。
-
-2、加强组织理论学习，不断提高自身素质。努力打下坚实的政策理论功底，拓宽个人知识领域。再进一步改进组织工作作风，在求真务实上狠下功夫，增强主动性，主动与人沟通解决问题。
-
-3、在日常工作中时刻牢记共产党员的身份，时刻严格要求自己，提高工作积极性，增强综合素质，将工作做的妥当，多向他人请教批评指正自己缺点，朝着成为优秀共产党员的目标不断前进。
-
-
+1、编程规范
+  命名风格 
+    勿用_ $、不用拼音、驼峰、Abstract Base Test、String[]、变量boolean不用isDeleted、包名：小写 英语单词 单数、类名可复数：MessageUtils、不缩写、可读性、代码自解释、设计模式：OrderFactory LoginFactory ResourceObserver、间接性：接口方法和属性不加任何修饰符 String COMPANY = "suning"、jdk8 defualt、接口Service DAO 实现类ServiceImpl、形容词的接口名称Translatable、枚举类SeasonEnum 成员SPRING SUMMER AUTUMN WINTER、获单个对象getXxx 多个对象listXxx/queryXxx 统计值countXxx 插入saveXxx/insertXxx 删除deleteXxx/removeXxx 修改updateXxx、数据对象xxxDO(xxx数据表名) 数据传输对象xxxDTO(xxx业务领域相关名称) 展示对象xxxVO(xxx网页名称) 业务对象xxxBO(xxx业务封装复杂对象) xxxPOJO(DO/DTO/BO/VO统称)
+  常量定义
+    不用魔法值(未经定义的常量) (long l=2L)避免小写的L与1混淆 常量类不要大而全要分类(缓存常量类CacheConsts、系统配置常量类ConfigConsts)、常量复用层次(跨应用共享常量 应用内共享常量 子工程内共享常量 包共享常量 类内共享常量) 三方库：外部开源库开源jar包(apache google)  二方库：公司内部发布的依赖库 一方库：本项目与工程中的类方法接口 枚举类
+  代码格式
+    简单用idea快捷键 ctrl alt L
+    
+  
+2、异常日志
+3、单元测试
+4、安全规约
+5、工程结构
+6、MySQL数据库
 
 
 1.如何处理单元测试产生的数据，下列哪些说法是正确的？ 【ABC】多选

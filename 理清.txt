@@ -490,11 +490,15 @@ FROM
 ${mod('scpc_t_purchase_storage', supplierCode,16)} freemarker模板语法分库操作
 
 new/newPurchase/newPurchaseToDeliver.ftl
+  
   select下拉列表，进行选择onchange就会触发
 根据条件查询家乐福采购订单分页信息
   scm管理分片配置
     resources/ids.redis.xml
 
+
+
+http://scpcsit.cnsuning.com/scpc/newPurchaseOrder/newPurchaseToDeliverList.action 
 new/newPurchase/newPurchaseToDeliver.ftl
   select下拉列表，进行选择onchange就会触发
 根据条件查询家乐福采购订单分页信息
@@ -510,14 +514,43 @@ new/newPurchase/newPurchaseToDeliver.ftl
         AND o.order_type = b.rule_code
         status            varchar(4)             null comment '预约单状态:10待审核20预约成功30已拒绝40预约失败50已取消60已入库71过期未收货72过期已收货I改期取消中;',
         
-        o createBusinessType  订单业务类型
+        o createBusinessType create_business_type  订单业务类型 字符串202 203 204 
         收货地点
           min(o.plant_name) AS plantName, 地点名称
           min(o.store_code) AS plantCode, 地点编码
         预约单号
           MIN(o.book_order_type) AS bookOrderType, 自动预约标识1无需预约,2自动预约3普通
-          MIN(s.tc_flag) AS tcFlag,  tc转运单标记
-
+          MIN(s.tc_flag) AS tcFlag,  tc转运单标记 
+            转运单取消预约
+          
+        在"部分取消弹窗"接口上修改成"取消预约弹窗"
+          showType=1进入"按预约单展示" =2进入"按商品行展示"
+          advanceFlag 检测负卖是否开通弹窗页面
+            true 负卖 jumpUrl = "new/storage/orderAdvanceCancelDetail";
+            false     jumpUrl = "new/storage/orderCancelDetail"
+               预约单商品信息orderList storageCommodity_shard queryOrderCommPageListByCancel 表 scpc_t_purchase_storage_commodity5
+                商品编码 commodityCode commodity_code
+                商品名称 commodityName commodity_name
+                预约入库数量 orderCount order_count
+                已入库数量 received_qty receivedQty
+                采购订单号 purchaseOrderId purchase_order_id
+               预约单头orderMap purchaseStorage_shard queryStorageByOrderId 表 scpc_t_purchase_storage5
+                预约单号 orderId
+                入库时间 arrivalDate
+                收货地点(D点名称 D点编码) plantName dcCode
+                发货单号 deliveryOrder
+            已经完成
+              没有修改后端代码，修改的是之前部分取消的弹窗页面new/storage/orderCancelDetai
+                后端状态码，条件判断
+                  
+          
+          
+          
+          
+          
+          
+          
+       
 
 写sql有什么关注点
   写sql  写业务层访问数据库 
@@ -585,5 +618,15 @@ org.apache.commons.lang.ArrayUtils
 
 
 
-    
-    
+发布工具
+  http://phoebus.cnsuning.com/#/appDetail/version/2654/0
+  http://eitp.cnsuning.com/itp-web-in/ 
+  http://test.cnsuning.com/testMainSysWeb/index.html#/manageService/measurementAndStatistics/codeCoverage 
+  自动化部署平台：http://odin.cnsuning.com/#/bmAppLog
+  
+    【黄浔博(14061814)】对 【SCPC】系统的 【2023.12.19标准型项目】版本，操作了【PRD】的【提交版本发布】，详见:http://odin.cnsuning.com/#/releaseMonitor/2995715。
+
+
+  http://phoebus.cnsuning.com/#/appDetail/version/2654/0苏宁开发云版本迭代
+  
+  <#--明天写这里--> 
