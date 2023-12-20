@@ -10,7 +10,7 @@
     4需要普通对象才能得到AOP代理对象的
     没有AOP的IOC的话，确实二级缓存就够了，有AOP的话如果提前发生AOP就需要再多一层缓存，大概这个意思吧
     
-    0、creatingSet<'AService'> CreatingSet是几级缓存啊? CreatingSet只是用来存放正在实例化的bean的名字，并不是缓存
+    0、creatingSet<'AService'> CreatingSet是几级缓存啊?    CreatingSet只是用来存放正在实例化的bean的名字，并不是缓存
     1、实例化-->Aservice普通对象-->singletonFactories.put('AService'，AService普通对象)
     2、填充bService--->单例池Map--->创建BService
         BService的Bean的生命周期
@@ -138,7 +138,7 @@ spring自定义容器：
         Class confiClass
         ConcurrentHashMap<String,Beandefinition> beanDefinition
         ConcurrentHashMap<String,Object> singletonObjects
-        ArrayList<BeanPostProcessor> beanPostPrcessor
+        ArrayList<BeanPostProcessor> beanPostProcessor
     }
 
   1、扫描--->BeanDefinition-->beanDefinitionMap
