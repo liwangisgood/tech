@@ -1,0 +1,35 @@
+IO 面向流(Stream Oriented)、阻塞(IO Blocking　IO)、
+    单向(流要么只能读或者只能写)：InputStream、OutputStream
+NIO 面向缓存区(Buffer Oriented)、非阻塞IO(Non Blocking IO)、选择器Selectors
+    核心：Channels Buffers Selectors
+        Channel：双向的全双工可读可写
+            主要实现，都继承了java.nio.channel.spi包AbstractSelectableChannel
+                FileChannel文件IO
+                    从文件中读写数据
+                    fc.position(long pos)特定位置进行文件读和写,文件空洞(磁盘上物理文件写入的数据间有空隙)
+                    long fileSize=fc.size()返回关联文件大小
+                    fc.truncate(1024)截取(删除)文件的前1024个字节
+                    fc.force()通道尚未写入的数据强制写到磁盘上
+                    fc.transferFrom()
+                    fc.transferTo()复制覆盖操作 如果有一个通道是FileChannel,可将数据传到其他通道
+                DataGramChannel(UDP)
+                    能通过UDP读写网络中的数据
+                SocketChannel(TCP)
+                    能通过TCP读写网络中的数据
+                ServerSocketChannel(TCP的Server和Client))
+                    可以监听新进来的TCP连接，像Web服务器那样。对每一个新进来的连接都会创建一个SocketChannel
+            从Buffer中读数据、写数据
+        Buffer：主要实现分别对应基本数据类型(ByteBuffer、ShortBuffer、IntBuffer、LongBuffer、FloatBuffer、DoubleBuffer、CharBuffer)
+            操作：将数据写入缓存区、调用buffeer.flip()反转读写模式、从缓存区读取数据、调用buffer.clear()或buffer.compact()清除缓冲区内容
+        Selector：注册Channel用Selector的select()方法
+    其他组件(工具类)：Pipe FileLock
+
+    Socket通道
+        
+阻塞式IO
+    传统Server/Client TPR(Thread Per Request)
+        服务器为每个客户端请求建立独立的线程去处理请求
+            建立线程池(避免线程重复创建与释放，线程复用)
+
+NIO
+    Selector中注册通道SelectableChannel,Selecttor实时监听通道的读或写；当通道中有感兴趣的事件发生
