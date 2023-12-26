@@ -25,7 +25,15 @@ NIO 面向缓存区(Buffer Oriented)、非阻塞IO(Non Blocking IO)、选择器S
     其他组件(工具类)：Pipe FileLock
 
     Socket通道
-        
+
+    SocketChannel
+        DatagramChannel
+        1、打开DatagramChannel
+        2、接收数据
+        3、发送数据
+        4、连接
+
+
 阻塞式IO
     传统Server/Client TPR(Thread Per Request)
         服务器为每个客户端请求建立独立的线程去处理请求

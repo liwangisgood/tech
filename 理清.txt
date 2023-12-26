@@ -614,11 +614,6 @@ org.apache.commons.lang.ArrayUtils
     【为什么StringBuilder线程不安全？ - CSDN App】http://t.csdnimg.cn/w6AGx
 
 
-
-<<<<<<< HEAD
-    WKJZZ-4ZHSC-9WN2M-LF5VF-KPJRW
-
-=======
 发布工具
   http://phoebus.cnsuning.com/#/appDetail/version/2654/0
   http://eitp.cnsuning.com/itp-web-in/
@@ -631,4 +626,18 @@ org.apache.commons.lang.ArrayUtils
   http://phoebus.cnsuning.com/#/appDetail/version/2654/0苏宁开发云版本迭代
 
   <#--明天写这里-->
->>>>>>> ff2cdd8c96741c1152d643a0f4d0e96af1b42ade
+  
+cmd控制台看端口占用
+  netstat
+    netstat --help
+    描述：显示协议统计信息和当前 TCP/IP 网络连接
+    应用：netstat -ano | findstr IP/端口port/进程pid/状态
+  tasklist
+    tasklist /?
+    描述：该工具显示在本地或远程机器上当前运行的进程列表
+    应用：tasklist | findstr 端口/应用名(模糊查询)
+  taskkill
+    taskkill /?
+    描述：使用该工具按照进程 ID (PID) 或映像名称(应用进程名称)终止任务
+    应用：taskkill  /f /t /pid 进程pid、taskkill /f /t /im 映像名称(可用*)
+    
